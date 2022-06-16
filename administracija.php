@@ -1,9 +1,7 @@
 <?php
-
 session_start();
 $dbc = mysqli_connect('localhost', 'root', '', 'projekt') or
 die('Error connecting to MySQL server.'. mysqli_connect_error());
-
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -15,6 +13,14 @@ die('Error connecting to MySQL server.'. mysqli_connect_error());
     <link rel="stylesheet" href="administracija_style.css">
 </head>
 <body>
+    <?php
+    if($_SESSION['username']!=null){
+        echo "<div id=\"gumb\"></div>";
+    }
+
+    include 'nav.php';
+    ?>
+
     <form action="administracija.php" method="post">
         <label for="username">Username</label><br>
         <input type="text" name="username" id="username" required><br>
@@ -26,30 +32,35 @@ die('Error connecting to MySQL server.'. mysqli_connect_error());
     <?php
         if(! empty($_POST['username'])){
             $username=$_POST['username'];
-            $password=password_hash($_POST['password'], CRYPT_BLOWFISH);
+            $password=$_POST['password'];
             $role="user";
-            $sql="SELECT * FROM korisnici WHERE ime = ? ";
-            $stmt=mysqli_stmt_init($dbc);
-            if (mysqli_stmt_prepare($stmt, $sql)){
-                mysqli_stmt_bind_param($stmt,'s',$username);
-                $result= mysqli_stmt_execute($stmt);
-                if(password_verify($password, $result['lozinka'])){
-                $_SESSION['username']=$username;
-                $_SESSION['password']=$password;
-                $_SESSION['role']=$result['uloga'];
-
-                }
+            $sql="SELECT * FROM korisnici WHERE ime = '".$username."' ";
+            $result= mysqli_query($dbc,$sql);
+                if($result){
+                    $row=$result->fetch_assoc();
+                    if(password_verify($password, $row['lozinka'])){
+                        $_SESSION['username']=$username;
+                        $_SESSION['password']=$password;
+                        $_SESSION['role']=$row['uloga'];
+                        
+                        echo "<a href=\"index.php\">Succesful login! Continue.";
+                    }
+                    else {
+                         echo "Incorect password.";
+                        }
             }
-        }
+            else{
+                echo "No username found? Maby register";
+
+            }
+        
+    }
     ?>
 
     <script>
-        console.log(document.getElementById("gumb"));
-       /* getElementById("gumb").onclick = function (event) {
-        var slanje_forme=true;
-         //kod koji ispituje da li treba slati formu
-        if (slanje_forme!=true) event.preventDefault();
-        } */
+        if(document.getElementById("gumb")!=null){
+        window.open("racun.php", "_self");
+        }
     </script>
     
     <br>
