@@ -21,3 +21,55 @@ nav ul>li>a{
 header{
     border-bottom: #000 solid 1px;
 }
+main{
+    max-width: 1000px;
+    margin: auto;
+}
+section{
+    display: grid;
+    column-gap: 50px;
+    grid-template-columns: auto auto auto;
+
+}
+section article img{
+    max-width: 100%;
+}
+
+section article h3{
+    max-width: 80%;
+    margin: auto;
+    text-align: center;
+    position: relative;
+    bottom: 50px;
+}
+section article h3 a{
+    text-decoration: none;
+    color: #000;
+    background-color: #fff;
+}
+section article h3 a:hover{
+    text-decoration: none;
+    color: #200d5d;
+    background-color: #f8f8f8;
+}
+
+
+section article p{
+    color: #545454;
+    font-size: 0.8em;
+    margin: 0;
+}
+
+footer{
+    border-top: #000 solid 1px;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-content: center;
+    justify-content: space-around;
+    align-items: center;
+}
+
+footer p,a{
+    display: inline-block;
+}

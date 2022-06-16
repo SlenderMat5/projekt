@@ -21,9 +21,182 @@
     </header>
     <main>
 
+      <img src="" alt="">
+
     </main>
     <footer>
 
     </footer>
+</body>
+</html>
+
+<?php
+$servername = "localhost";
+$uname = "root";
+$password = "";
+$dbname = "test";
+
+// Create connection
+$conn = new mysqli($servername, $uname, $password, $dbname);
+// Check connection
+if ($conn->connect_error) {
+  die("Connection failed: " . $conn->connect_error);
+}
+
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>0246098811</title>
+</head>
+<body>
+    <form action="zadatak.php" method="post">
+        <label for="username">Username</label>
+        <input type="text" name="username" id="username" required><br>        
+        <label for="password">Password</label>
+        <input type="password" name="password" id="password" required><br>
+        <input type="submit" value="Send">
+    </form>
+
+    <?php
+    if(! empty($_POST['username']) && ! empty($_POST['password'])){
+    $sql="select * from users where username='".$_POST['username']."';";
+    $result=$conn->query($sql);
+    if($result->num_rows > 0){
+
+        $row=$result->fetch_assoc();
+        if($row['username']==$_POST['username'] && password_verify($_POST['password'],$row['password'])){
+            echo "<br> <b>Prijava je uspješna</b>";
+        }else{
+        echo "<br> <b>Korisničko ime se već koristi</b>";
+        }
+
+
+   
+    }else{
+        $sql="INSERT INTO `users` (`username`, `password`, `restrictions`) VALUES ('".$_POST['username']."', '".password_hash($_POST['password'], CRYPT_BLOWFISH)."', 'nesto')";
+        $result=$conn->query($sql);
+        if($result){
+        echo "<br> <b>Registracija je uspješna</b>";
+        }else{
+            echo "<br> <b>Registracija nije uspješna</b>";
+
+        }
+    }
+    }
+    ?>
+
+    /*Prvi dokument*/
+<?php
+session_start();
+
+$servername = "localhost";
+$uname = "root";
+$password = "";
+$dbname = "test";
+
+// Create connection
+$conn = new mysqli($servername, $uname, $password, $dbname);
+// Check connection
+if ($conn->connect_error) {
+  die("Connection failed: " . $conn->connect_error);
+}
+
+?>
+///////////////////////////////////////////////////////////////////////////////
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>0246098811</title>
+</head>
+<body>
+    <form action="zadatak.php" method="post">
+        <label for="username">Username</label>
+        <input type="text" name="username" id="username" required><br>        
+        <label for="password">Password</label>
+        <input type="password" name="password" id="password" required><br>
+        <input type="submit" value="Send">
+    </form>
+
+    <?php
+    if(! empty($_POST['username']) && ! empty($_POST['password'])){
+    $sql="select * from users where username='".$_POST['username']."';";
+    $result=$conn->query($sql);
+    if($result->num_rows > 0){
+
+        $row=$result->fetch_assoc();
+        if($row['username']==$_POST['username'] && password_verify($_POST['password'],$row['password'])){
+            $_SESSION['username']=$_POST['username'];
+            $_SESSION['restrictions']=$row['restrictions'];
+            echo "<br> <b>Prijava je uspješna</b>";
+            echo "<br>Dobrodošli.";
+            if($row['restrictions']=="admin"){
+                echo "Vaša razina je admin.";
+            }
+            echo "<br> <a href=\"zadatak_1.php\">NEXT</a>";
+        }else{
+        echo "<br> <b>Korisničko ime se već koristi</b>";
+        }
+
+
+   
+    }else{
+        if(rand(0,1)==1){
+            $role="admin";
+        }
+        else{
+            $role="user";
+        }
+
+        $sql="INSERT INTO `users` (`username`, `password`, `restrictions`) VALUES ('".$_POST['username']."', '".password_hash($_POST['password'], CRYPT_BLOWFISH)."', '".$role."')";
+        $result=$conn->query($sql);
+        if($result){
+        echo "<br> <b>Registracija je uspješna</b>";
+        $_SESSION['username']=$_POST['username'];
+        $_SESSION['restrictions']=$role;
+        if($role=="admin"){
+            echo "Vaša razina je admin.";
+        }
+        echo "<br> <a href=\"zadatak_1.php\">NEXT</a>";
+
+        }else{
+            echo "<br> <b>Registracija nije uspješna</b>";
+
+        }
+    }
+    }
+    ?>
+</body>
+</html>
+/*Drugi document naziva zadatak_1.php*/
+<?php
+session_start();
+$username=$_SESSION['username'];
+$role=$_SESSION['restrictions'];
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>0246098811</title>
+</head>
+<body>
+   <?php
+   echo "Dobrodošli $username";
+
+   if($role=="admin"){
+       echo "Vaša razina je admin";
+   }
+   ?>
 </body>
 </html>
