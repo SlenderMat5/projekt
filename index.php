@@ -22,11 +22,11 @@ die('Error connecting to MySQL server.'. mysqli_connect_error());
     <h2>POLITIQUE</h2>
         <section id="politique">
             <?php
-            $sql="SELECT * FROM `novosti` WHERE kategorija='politique' LIMIT 3";
+            $sql="SELECT `novosti`.*, `slike`.`ime` AS ime_slike FROM novosti INNER JOIN `slike` ON `novosti`.`slika_id`=`slike`.`id_slike` WHERE kategorija='politique' LIMIT 3";
             $result = mysqli_query($dbc, $sql);
             while($row = mysqli_fetch_array($result)) {
                 echo "<article>";
-                echo "  <img src=".$row['slika'].">";
+                echo "  <img src= \"images/".$row['ime_slike'].".jpg\">";
                 echo "<h3><a href=\"news.php?id=".$row['id_novosti']."\">".$row['naslov']."</a></h3>";
                 echo "<p>".$row['datum']."</p>";
                 echo "</article>";
