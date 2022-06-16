@@ -19,11 +19,12 @@ die('Error connecting to MySQL server.'. mysqli_connect_error());
     grid-column-gap: 10px;
     } 
 
-    aside {
+    aside .racun{
+    
     grid-area: left;
     }
 
-    main {
+    main .racun{
     grid-area: middle;
     }
 
@@ -46,13 +47,36 @@ die('Error connecting to MySQL server.'. mysqli_connect_error());
     </h2>
 </nav>
 <div class="grid-container">
-<main>
- 
-</main>
-<aside>
+<main class="racun">
+    <form action="news_manager.php" method="post" enctype="multipart/form-data">
+        <label for="naslov">Naslov:</label><br>
+        <input type="text" name="naslov" id="naslov"><br>
+        <label for="fileToUpload">Naslovna slika</label><br>
+        <input type="file" name="fileToUpload" id="fileToUpload"><br>
+        <label for="sadrzaj">Sadržaj</label><br>
+        <textarea name="sadrzaj" id="sadrzaj" cols="30" rows="10"></textarea><br>
+        <input type="submit" value="Publish">
+    </form>
     
+</main>
+<aside class="racun">
+<?php
+            $sql="SELECT * FROM `novosti` WHERE autor_id='".$_SESSION['id']."' LIMIT 3";
+            $result = mysqli_query($dbc, $sql);
+            while($row = mysqli_fetch_array($result)) {
+                echo "<article>";
+                echo "  <img src=".$row['slika'].">";
+                echo "<h3><a href=\"news.php?id=".$row['id_novosti']."\">".$row['naslov']."</a></h3>";
+                echo "<p>".$row['datum']."</p>";
+                echo "</article>";
+            }
+
+            ?>
 </aside>
 </div>
+<form action="logout.php" method="post">
+    <input type="submit" value="Logout">
+</form>
 <?php
     include 'footer.php';
 ?>

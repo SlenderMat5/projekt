@@ -14,7 +14,7 @@ die('Error connecting to MySQL server.'. mysqli_connect_error());
 </head>
 <body>
     <?php
-    if($_SESSION['username']!=null){
+    if($_SESSION!=null){
         echo "<div id=\"gumb\"></div>";
     }
 
@@ -42,8 +42,10 @@ die('Error connecting to MySQL server.'. mysqli_connect_error());
                         $_SESSION['username']=$username;
                         $_SESSION['password']=$password;
                         $_SESSION['role']=$row['uloga'];
+                        $_SESSION['id']=$row['id_korisnik'];
+
                         
-                        echo "<a href=\"index.php\">Succesful login! Continue.";
+                        echo "<a href=\"racun.php\">Succesful login! Continue.";
                     }
                     else {
                          echo "Incorect password.";
