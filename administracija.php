@@ -1,4 +1,6 @@
 <?php
+
+session_start();
 $dbc = mysqli_connect('localhost', 'root', '', 'projekt') or
 die('Error connecting to MySQL server.'. mysqli_connect_error());
 
@@ -20,6 +22,35 @@ die('Error connecting to MySQL server.'. mysqli_connect_error());
         <input type="password" name="password" id="password" required><br>
         <input type="submit" value="Login">
     </form>
+
+    <?php
+        if(! empty($_POST['username'])){
+            $username=$_POST['username'];
+            $password=password_hash($_POST['password'], CRYPT_BLOWFISH);
+            $role="user";
+            $sql="SELECT * FROM korisnici WHERE ime = ? ";
+            $stmt=mysqli_stmt_init($dbc);
+            if (mysqli_stmt_prepare($stmt, $sql)){
+                mysqli_stmt_bind_param($stmt,'s',$username);
+                $result= mysqli_stmt_execute($stmt);
+                if(password_verify($password, $result['lozinka'])){
+                $_SESSION['username']=$username;
+                $_SESSION['password']=$password;
+                $_SESSION['role']=$result['uloga'];
+
+                }
+            }
+        }
+    ?>
+
+    <script>
+        console.log(document.getElementById("gumb"));
+       /* getElementById("gumb").onclick = function (event) {
+        var slanje_forme=true;
+         //kod koji ispituje da li treba slati formu
+        if (slanje_forme!=true) event.preventDefault();
+        } */
+    </script>
     
     <br>
     <a href="register.php">Don't have an account jet? register here.</a>
